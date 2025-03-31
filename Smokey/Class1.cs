@@ -1,6 +1,11 @@
-﻿using Il2CppScheduleOne.Money;
+﻿using Il2CppScheduleOne.GameTime;
+using Il2CppScheduleOne.Levelling;
+using Il2CppScheduleOne.Money;
 using Il2CppScheduleOne.NPCs;
+using Il2CppScheduleOne.Persistence.Datas;
 using Il2CppScheduleOne.PlayerScripts;
+using Il2CppScheduleOne.UI;
+using Il2CppSystem;
 using MelonLoader;
 using UnityEngine;
 
@@ -15,14 +20,31 @@ namespace Smokey
 
         private bool playerEspEnabled = false;
         private bool npcEspEnabled = false;
-        private int selectedPlayer = 0;
-        private static Camera? localPlayerCamera;
+        private static float selectedTime = 1;
+        private bool isMainScene = false;
 
         ESP esp = new ESP();
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             base.OnSceneWasLoaded(buildIndex, sceneName);
+            if(sceneName == "Main")
+            {
+                isMainScene = true;
+            } else
+            {
+                isMainScene = false;
+            }
+        }
+
+        public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
+        {
+            base.OnSceneWasUnloaded(buildIndex, sceneName);
+
+            if (sceneName == "Main")
+            {
+                isMainScene = false;
+            }
         }
 
         public override void OnGUI()
@@ -48,36 +70,76 @@ namespace Smokey
         {
             GUILayout.BeginVertical();
 
-            #region Money Options
-            GUILayout.Label("Money options");
-
-            if (GUILayout.Button("Add 100"))
+            if (isMainScene)
             {
-                GiveMoney(100);
-            }
+                #region Money Options
+                GUILayout.Label("Money options");
 
-            if (GUILayout.Button("Add 1000"))
+                if (GUILayout.Button("Add 100"))
+                {
+                    GiveMoney(100);
+                }
+
+                if (GUILayout.Button("Add 1000"))
+                {
+                    GiveMoney(1000);
+                }
+
+                if (GUILayout.Button("Add 10000"))
+                {
+                    GiveMoney(10000);
+                }
+
+                if (GUILayout.Button("Add 100000"))
+                {
+                    GiveMoney(100000);
+                }
+                #endregion
+
+                #region Money Options
+                GUILayout.Label("XP options");
+
+                if (GUILayout.Button("Add 100"))
+                {
+                    GiveXP(100);
+                }
+
+                if (GUILayout.Button("Add 1000"))
+                {
+                    GiveXP(1000);
+                }
+
+                if (GUILayout.Button("Add 10000"))
+                {
+                    GiveXP(10000);
+                }
+
+                if (GUILayout.Button("Add 100000"))
+                {
+                    GiveXP(100000);
+                }
+                #endregion
+
+                #region ESP
+                GUILayout.Label("ESP");
+                playerEspEnabled = GUILayout.Toggle(playerEspEnabled, "Enable Player ESP");
+                npcEspEnabled = GUILayout.Toggle(npcEspEnabled, "Enable NPC ESP");
+                #endregion
+
+                #region Time
+                GUILayout.Label("Time");
+                GUILayout.Label($"Selected: {selectedTime.ToString()}");
+                selectedTime = GUILayout.HorizontalSlider(selectedTime, 0f, 24f);
+                if (GUILayout.Button("Set Time"))
+                {
+                    SetTime((int)selectedTime);
+                }
+                #endregion
+            } else
             {
-                GiveMoney(1000);
+                GUILayout.Label("Load the game to get the sweet cheats!");
             }
-
-            if (GUILayout.Button("Add 10000"))
-            {
-                GiveMoney(10000);
-            }
-
-            if (GUILayout.Button("Add 100000"))
-            {
-                GiveMoney(100000);
-            }
-            #endregion
-
-            #region ESP
-            GUILayout.Label("ESP");
-            playerEspEnabled = GUILayout.Toggle(playerEspEnabled, "Enable Player ESP");
-            npcEspEnabled = GUILayout.Toggle(npcEspEnabled, "Enable NPC ESP");
-            #endregion
-            GUILayout.EndVertical();
+                GUILayout.EndVertical();
 
             GUI.DragWindow();
         }
@@ -99,9 +161,19 @@ namespace Smokey
         //    return player!;
         //}
 
-        private void GiveMoney(int moneyValue)
+        private void GiveMoney(float moneyValue)
         {
             MoneyManager.Instance.ChangeCashBalance(moneyValue);
+        }
+
+        private void GiveXP(int xpValue)
+        {
+            DailySummary.Instance.AddXP(xpValue);
+        }
+
+        private void SetTime(int time)
+        {
+            TimeManager.Instance.SetTime(Mathf.Clamp(time, 1, 24));
         }
 
         private static Il2CppSystem.Collections.Generic.List<Player> GetPlayers()
