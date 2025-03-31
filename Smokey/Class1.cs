@@ -1,23 +1,10 @@
-﻿using Il2CppScheduleOne.GameTime;
-using Il2CppScheduleOne.Levelling;
-using Il2CppScheduleOne.Money;
-using Il2CppScheduleOne.NPCs;
-using Il2CppScheduleOne.Persistence.Datas;
-using Il2CppScheduleOne.PlayerScripts;
-using Il2CppScheduleOne.UI;
-using Il2CppSystem;
-using MelonLoader;
+﻿using MelonLoader;
 using UnityEngine;
 
 namespace Smokey
 {
     public class Class1 : MelonMod
     {
-        private static KeyCode guiToggleKey = KeyCode.Insert;
-        private static bool showUI = false;
-        private static Rect windowRect = new Rect(20, 20, 300, 400);
-        private static int windowID = 1001;
-
         private bool playerEspEnabled = false;
         private bool npcEspEnabled = false;
         private static float selectedTime = 1;
@@ -25,44 +12,38 @@ namespace Smokey
 
         ESP esp = new ESP();
 
+        private int currentTab = 99;
+        private string[] tabNames = { "Money", "XP", "ESP", "Time", "Misc" };
+
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             base.OnSceneWasLoaded(buildIndex, sceneName);
-            if(sceneName == "Main")
-            {
-                isMainScene = true;
-            } else
-            {
-                isMainScene = false;
-            }
+            Utils.CheckMainScene(sceneName, ref isMainScene, false);
         }
 
         public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
         {
             base.OnSceneWasUnloaded(buildIndex, sceneName);
 
-            if (sceneName == "Main")
-            {
-                isMainScene = false;
-            }
+            Utils.CheckMainScene(sceneName, ref isMainScene, true);
         }
 
         public override void OnGUI()
         {
-            if (showUI)
+            if (Settings.showUI)
             {
                 GUI.backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
 
-                windowRect = GUI.Window(windowID, windowRect, (GUI.WindowFunction)DrawWindow, "Smokey Menu");
+                Settings.windowRect = GUI.Window(Settings.windowID, Settings.windowRect, (GUI.WindowFunction)DrawWindow, "Smokey Menu");
             }
 
-            if(playerEspEnabled)
+            if (playerEspEnabled)
             {
-                esp.DrawESPPlayers(GetPlayers());
+                esp.DrawESPPlayers(Features.GetPlayers());
             }
             if (npcEspEnabled)
             {
-                esp.DrawESPNPC(GetNPCS());
+                esp.DrawESPNPC(Features.GetNPCS());
             }
         }
 
@@ -70,134 +51,136 @@ namespace Smokey
         {
             GUILayout.BeginVertical();
 
-            if (isMainScene)
+            // Tab system
+            if(isMainScene)
             {
-                #region Money Options
+                GUILayout.BeginHorizontal();
+                for (int i = 0; i < tabNames.Length; i++)
+                {
+                    if (GUILayout.Button(tabNames[i]))
+                    {
+                        currentTab = i;
+                    }
+                }
+                GUILayout.EndHorizontal();
+            } else
+            {
+                GUILayout.Label("Load the game to get access to cheats.");
+            }
+
+                // Tab contents
+                switch (currentTab)
+                {
+                    case 0:
+                        DrawMoneyTab();
+                        break;
+                    case 1:
+                        DrawXPTab();
+                        break;
+                    case 2:
+                        DrawESPTab();
+                        break;
+                    case 3:
+                        DrawTimeTab();
+                        break;
+                    case 4:
+                        DrawMiscTab();
+                        break;
+                }
+
+            GUILayout.EndVertical();
+            GUI.DragWindow();
+        }
+
+        private void DrawMoneyTab()
+        {
                 GUILayout.Label("Money options");
 
                 if (GUILayout.Button("Add 100"))
                 {
-                    GiveMoney(100);
+                    Features.GiveMoney(100);
                 }
 
                 if (GUILayout.Button("Add 1000"))
                 {
-                    GiveMoney(1000);
+                    Features.GiveMoney(1000);
                 }
 
                 if (GUILayout.Button("Add 10000"))
                 {
-                    GiveMoney(10000);
+                    Features.GiveMoney(10000);
                 }
 
-                if (GUILayout.Button("Add 100000"))
-                {
-                    GiveMoney(100000);
-                }
-                #endregion
+            if (GUILayout.Button("Add 100000"))
+            {
+                Features.GiveMoney(100000);
+            }
+        }
 
-                #region Money Options
+        private void DrawXPTab()
+        {
                 GUILayout.Label("XP options");
 
                 if (GUILayout.Button("Add 100"))
                 {
-                    GiveXP(100);
+                    Features.GiveXP(100);
                 }
 
                 if (GUILayout.Button("Add 1000"))
                 {
-                    GiveXP(1000);
+                    Features.GiveXP(1000);
                 }
 
                 if (GUILayout.Button("Add 10000"))
                 {
-                    GiveXP(10000);
+                    Features.GiveXP(10000);
                 }
 
-                if (GUILayout.Button("Add 100000"))
-                {
-                    GiveXP(100000);
-                }
-                #endregion
-
-                #region ESP
-                GUILayout.Label("ESP");
-                playerEspEnabled = GUILayout.Toggle(playerEspEnabled, "Enable Player ESP");
-                npcEspEnabled = GUILayout.Toggle(npcEspEnabled, "Enable NPC ESP");
-                #endregion
-
-                #region Time
-                GUILayout.Label("Time");
-                GUILayout.Label($"Selected: {selectedTime.ToString()}");
-                selectedTime = GUILayout.HorizontalSlider(selectedTime, 0f, 24f);
-                if (GUILayout.Button("Set Time"))
-                {
-                    SetTime((int)selectedTime);
-                }
-                #endregion
-            } else
+            if (GUILayout.Button("Add 100000"))
             {
-                GUILayout.Label("Load the game to get the sweet cheats!");
+                Features.GiveXP(100000);
             }
-                GUILayout.EndVertical();
-
-            GUI.DragWindow();
         }
 
-        //private static Player GetLocalPlayer()
-        //{
-        //    Player player = null;
-
-        //    foreach (Player index in GetPlayers())
-        //    {
-        //        if (index.IsLocalPlayer)
-        //        {
-        //            player = index;
-        //            break;
-        //        }
-        //        continue;
-        //    }
-
-        //    return player!;
-        //}
-
-        private void GiveMoney(float moneyValue)
+        private void DrawESPTab()
         {
-            MoneyManager.Instance.ChangeCashBalance(moneyValue);
+            GUILayout.Label("ESP");
+            playerEspEnabled = GUILayout.Toggle(playerEspEnabled, "Enable Player ESP");
+            npcEspEnabled = GUILayout.Toggle(npcEspEnabled, "Enable NPC ESP");
         }
 
-        private void GiveXP(int xpValue)
+        private void DrawTimeTab()
         {
-            DailySummary.Instance.AddXP(xpValue);
+            GUILayout.Label("Time");
+            GUILayout.Label($"Selected: {selectedTime.ToString()}");
+            selectedTime = GUILayout.HorizontalSlider(selectedTime, 0f, 24f);
+            if (GUILayout.Button("Set Time"))
+            {
+                Features.SetTime((int)selectedTime);
+            }
         }
 
-        private void SetTime(int time)
+        private void DrawMiscTab()
         {
-            TimeManager.Instance.SetTime(Mathf.Clamp(time, 1, 24));
-        }
-
-        private static Il2CppSystem.Collections.Generic.List<Player> GetPlayers()
-        {
-            return Player.PlayerList;
-        }
-
-        private static Il2CppSystem.Collections.Generic.List<NPC> GetNPCS()
-        {
-            return NPCManager.NPCRegistry;
+            GUILayout.Label("Miscellaneous Options");
         }
 
         public override void OnUpdate()
         {
-            if (Input.GetKeyDown(guiToggleKey))
+            if (Input.GetKeyDown(Settings.guiToggleKey))
             {
-                showUI = !showUI;
-                Cursor.visible = showUI;
-                if (showUI)
+                Settings.showUI = !Settings.showUI;
+                if(isMainScene)
                 {
-                    Cursor.lockState = CursorLockMode.None;
-                }
-                else { 
-                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = Settings.showUI;
+                    if (Settings.showUI)
+                    {
+                        Cursor.lockState = CursorLockMode.None;
+                    }
+                    else
+                    {
+                        Cursor.lockState = CursorLockMode.Locked;
+                    }
                 }
             }
         }
