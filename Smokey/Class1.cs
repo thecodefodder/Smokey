@@ -1,10 +1,7 @@
-﻿using Il2CppScheduleOne;
-using Il2CppScheduleOne.Money;
+﻿using Il2CppScheduleOne.Money;
 using Il2CppScheduleOne.PlayerScripts;
 using MelonLoader;
-using System;
 using UnityEngine;
-using static Il2CppMono.Security.X509.X520;
 
 namespace Smokey
 {
