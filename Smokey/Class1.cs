@@ -51,23 +51,23 @@ namespace Smokey
 
         private void DrawWindow(int id)
         {
-            GUILayout.BeginVertical();
+            UI.BeginVertical();
 
             // Tab system
             if(isMainScene)
             {
-                GUILayout.BeginHorizontal();
+                UI.BeginHorizontal();
                 for (int i = 0; i < tabNames.Length; i++)
                 {
-                    if (GUILayout.Button(tabNames[i]))
+                    if (UI.Button(tabNames[i]))
                     {
                         currentTab = i;
                     }
                 }
-                GUILayout.EndHorizontal();
+                UI.EndHorizontal();
             } else
             {
-                GUILayout.Label("Load the game to get access to cheats.");
+                UI.Label("Load the game to get access to cheats.");
             }
 
                 // Tab contents
@@ -90,30 +90,30 @@ namespace Smokey
                         break;
                 }
 
-            GUILayout.EndVertical();
+            UI.EndVertical();
             GUI.DragWindow();
         }
 
         private void DrawMoneyTab()
         {
-                GUILayout.Label("Money options");
+                UI.Label("Money options");
 
-                if (GUILayout.Button("Add 100"))
+                if (UI.Button("Add 100"))
                 {
                     Features.GiveMoney(100);
                 }
 
-                if (GUILayout.Button("Add 1000"))
+                if (UI.Button("Add 1000"))
                 {
                     Features.GiveMoney(1000);
                 }
 
-                if (GUILayout.Button("Add 10000"))
+                if (UI.Button("Add 10000"))
                 {
                     Features.GiveMoney(10000);
                 }
 
-            if (GUILayout.Button("Add 100000"))
+            if (UI.Button("Add 100000"))
             {
                 Features.GiveMoney(100000);
             }
@@ -121,24 +121,24 @@ namespace Smokey
 
         private void DrawXPTab()
         {
-                GUILayout.Label("XP options");
+                UI.Label("XP options");
 
-                if (GUILayout.Button("Add 100"))
+                if (UI.Button("Add 100"))
                 {
                     Features.GiveXP(100);
                 }
 
-                if (GUILayout.Button("Add 1000"))
+                if (UI.Button("Add 1000"))
                 {
                     Features.GiveXP(1000);
                 }
 
-                if (GUILayout.Button("Add 10000"))
+                if (UI.Button("Add 10000"))
                 {
                     Features.GiveXP(10000);
                 }
 
-            if (GUILayout.Button("Add 100000"))
+            if (UI.Button("Add 100000"))
             {
                 Features.GiveXP(100000);
             }
@@ -146,20 +146,20 @@ namespace Smokey
 
         private void DrawESPTab()
         {
-            GUILayout.Label("ESP");
-            playerEspEnabled = GUILayout.Toggle(playerEspEnabled, "Enable Player ESP");
-            npcEspEnabled = GUILayout.Toggle(npcEspEnabled, "Enable NPC ESP");
+            UI.Label("ESP");
+            playerEspEnabled = UI.Toggle(playerEspEnabled, "Enable Player ESP");
+            npcEspEnabled = UI.Toggle(npcEspEnabled, "Enable NPC ESP");
         }
 
         private void DrawTimeTab()
         {
-            GUILayout.Label("Time");
+            UI.Label("Time");
 
-            GUILayout.Label($"Selected: {Mathf.RoundToInt(selectedTime)}h");
+            UI.Label($"Selected: {Mathf.RoundToInt(selectedTime)}h");
 
-            selectedTime = GUILayout.HorizontalSlider(selectedTime, 0f, 24f);
+            selectedTime = UI.Slider(selectedTime, 0f, 24f);
 
-            if (GUILayout.Button("Set Time"))
+            if (UI.Button("Set Time"))
             {
                 int selectedTimeInt = Mathf.RoundToInt(selectedTime);
                 Features.SetTime(selectedTimeInt);
@@ -168,7 +168,7 @@ namespace Smokey
 
         private void DrawMiscTab()
         {
-            GUILayout.Label("Miscellaneous");
+            UI.Label("Miscellaneous");
         }
 
         public override void OnUpdate()
