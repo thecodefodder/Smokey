@@ -1,7 +1,4 @@
-﻿using Il2CppToolBuddy.ThirdParty.VectorGraphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Smokey
 {
@@ -12,10 +9,33 @@ namespace Smokey
             if (sceneName == "Main" && unloading)
             {
                 isMainScene = false;
-            } else if (sceneName == "Main" && !unloading)
+            }
+            else if (sceneName == "Main" && !unloading)
             {
                 isMainScene = true;
             }
+        }
+
+        public class FlipFlop
+        {
+            private bool _state;
+
+            public FlipFlop(bool initialState = false)
+            {
+                _state = initialState;
+            }
+
+            public bool SetState(bool newState)
+            {
+                if (newState != _state)
+                {
+                    _state = newState;
+                    return true;
+                }
+                return false;
+            }
+
+            public bool GetState() => _state;
         }
     }
 }

@@ -7,8 +7,10 @@ namespace Smokey
     {
         private bool playerEspEnabled = false;
         private bool npcEspEnabled = false;
+        private bool disablePolice = false;
         private static float selectedTime = 1;
         private bool isMainScene = false;
+        private Utils.FlipFlop undetectedFlipFlop = new Utils.FlipFlop(false);
 
         ESP esp = new ESP();
 
@@ -162,7 +164,16 @@ namespace Smokey
 
         private void DrawMiscTab()
         {
-            GUILayout.Label("Miscellaneous Options");
+            GUILayout.Label("Miscellaneous");
+            bool newUndetectedState = GUILayout.Toggle(undetectedFlipFlop.GetState(), "Undetected Mode");
+
+            if(undetectedFlipFlop.SetState(newUndetectedState))
+            {
+                if(newUndetectedState)
+                {
+                    Features.Undetected();
+                }
+            }
         }
 
         public override void OnUpdate()

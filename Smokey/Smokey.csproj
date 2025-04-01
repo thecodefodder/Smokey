@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>E:\Games\Schedule I\MelonLoader\net6\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>E:\Games\Schedule I\MelonLoader\Il2CppAssemblies\Assembly-CSharp.dll</HintPath>
     </Reference>

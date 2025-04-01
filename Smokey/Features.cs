@@ -4,11 +4,14 @@ using Il2CppScheduleOne.UI;
 using Il2CppScheduleOne.GameTime;
 using UnityEngine;
 using Il2CppScheduleOne.PlayerScripts;
+using Il2CppScheduleOne.Police;
 
 namespace Smokey
 {
     public class Features
     {
+        public static bool undetectedbool = false;
+
         public static void GiveMoney(float moneyValue)
         {
             MoneyManager.Instance.ChangeCashBalance(moneyValue);
@@ -32,6 +35,18 @@ namespace Smokey
         public static Il2CppSystem.Collections.Generic.List<NPC> GetNPCS()
         {
             return NPCManager.NPCRegistry;
+        }
+
+        public static void Undetected()
+        {
+            if (undetectedbool)
+            {
+                Patches.ApplyInvestigatePatches();
+            }
+            else
+            {
+                Patches.RemoveInvestigatePatches();
+            }
         }
     }
 }
