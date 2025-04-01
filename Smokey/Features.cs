@@ -22,9 +22,9 @@ namespace Smokey
             DailySummary.Instance.AddXP(xpValue);
         }
 
-        public static void SetTime(int time)
+        public static void SetTime(float time)
         {
-            TimeManager.Instance.SetTime(Mathf.Clamp(time, 1, 24));
+            TimeManager.Instance.SetTime((int)time * 100);
         }
 
         public static Il2CppSystem.Collections.Generic.List<Player> GetPlayers()

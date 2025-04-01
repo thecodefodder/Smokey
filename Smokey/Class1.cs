@@ -154,11 +154,15 @@ namespace Smokey
         private void DrawTimeTab()
         {
             GUILayout.Label("Time");
-            GUILayout.Label($"Selected: {selectedTime.ToString()}");
+
+            GUILayout.Label($"Selected: {Mathf.RoundToInt(selectedTime)}h");
+
             selectedTime = GUILayout.HorizontalSlider(selectedTime, 0f, 24f);
+
             if (GUILayout.Button("Set Time"))
             {
-                Features.SetTime((int)selectedTime);
+                int selectedTimeInt = Mathf.RoundToInt(selectedTime);
+                Features.SetTime(selectedTimeInt);
             }
         }
 
