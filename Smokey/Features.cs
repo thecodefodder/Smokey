@@ -2,9 +2,7 @@
 using Il2CppScheduleOne.NPCs;
 using Il2CppScheduleOne.UI;
 using Il2CppScheduleOne.GameTime;
-using UnityEngine;
 using Il2CppScheduleOne.PlayerScripts;
-using Il2CppScheduleOne.Police;
 
 namespace Smokey
 {
@@ -35,18 +33,6 @@ namespace Smokey
         public static Il2CppSystem.Collections.Generic.List<NPC> GetNPCS()
         {
             return NPCManager.NPCRegistry;
-        }
-
-        public static void Undetected()
-        {
-            if (undetectedbool)
-            {
-                Patches.ApplyInvestigatePatches();
-            }
-            else
-            {
-                Patches.RemoveInvestigatePatches();
-            }
         }
     }
 }

@@ -169,15 +169,6 @@ namespace Smokey
         private void DrawMiscTab()
         {
             GUILayout.Label("Miscellaneous");
-            bool newUndetectedState = GUILayout.Toggle(undetectedFlipFlop.GetState(), "Undetected Mode");
-
-            if(undetectedFlipFlop.SetState(newUndetectedState))
-            {
-                if(newUndetectedState)
-                {
-                    Features.Undetected();
-                }
-            }
         }
 
         public override void OnUpdate()
